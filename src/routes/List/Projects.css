@@ -1,0 +1,48 @@
+@import "../../_vars.css";
+
+.coverCardList {
+  margin-bottom: -24px;
+
+  & .card {
+    :global {
+      .ant-card-meta-title {
+        margin-bottom: 4px;
+        & > a {
+          color: var(--heading-color);
+        }
+      }
+      .ant-card-meta-description {
+        height: 44px;
+        line-height: 22px;
+        overflow: hidden;
+      }
+    }
+
+    &:hover {
+      :global {
+        .ant-card-meta-title > a {
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
+
+  & .cardItemContent {
+    display: flex;
+    margin-top: 16px;
+    margin-bottom: -4px;
+    line-height: 20px;
+    height: 20px;
+    & > span {
+      color: var(--text-color-secondary);
+      flex: 1;
+      font-size: 12px;
+    }
+    & .avatarList {
+      flex: 0 1 auto;
+    }
+  }
+  & .cardList {
+    margin-top: 24px;
+  }
+}

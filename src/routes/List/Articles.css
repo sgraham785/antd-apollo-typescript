@@ -1,0 +1,65 @@
+@import "../../_vars.css";
+@import "../../_mixins.css";
+
+.listContent {
+  & .description {
+    line-height: 22px;
+    max-width: 720px;
+  }
+  & .extra {
+    color: var(--text-color-secondary);
+    margin-top: 16px;
+    line-height: 22px;
+    & > :global(.ant-avatar) {
+      vertical-align: top;
+      margin-right: 8px;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      top: 1px;
+    }
+    & > em {
+      color: var(--disabled-color);
+      font-style: normal;
+      margin-left: 16px;
+    }
+  }
+}
+a.listItemMetaTitle {
+  color: var(--heading-color);
+}
+.listItemExtra {
+  width: 272px;
+  height: 1px;
+}
+.selfTrigger {
+  margin-left: 12px;
+}
+
+@media screen and (--screen-xs-max) {
+  .selfTrigger {
+    display: block;
+    margin-left: 0;
+  }
+  .listContent {
+    & .extra {
+      & > em {
+        display: block;
+        margin-left: 0;
+        margin-top: 8px;
+      }
+    }
+  }
+}
+@media screen and (--screen-md-max) {
+  .selfTrigger {
+    display: block;
+    margin-left: 0;
+  }
+}
+@media screen and (--screen-lg-max) {
+  .listItemExtra {
+    width: 0;
+    height: 1px;
+  }
+}

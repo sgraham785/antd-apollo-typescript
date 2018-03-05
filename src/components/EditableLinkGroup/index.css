@@ -1,0 +1,16 @@
+@import "../../_vars.css";
+
+.linkGroup {
+  padding: 20px 0 8px 24px;
+  font-size: 0;
+  & > a {
+    color: var(--text-color);
+    display: inline-block;
+    font-size: var(--font-size-base);
+    margin-bottom: 13px;
+    width: 25%;
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+}

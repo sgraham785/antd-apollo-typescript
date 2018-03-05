@@ -1,0 +1,57 @@
+@import "../../_vars.css";
+
+.main {
+  width: 368px;
+  margin: 0 auto;
+
+  :global {
+    .ant-form-item {
+      margin-bottom: 24px;
+    }
+  }
+
+  & h3 {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  & .getCaptcha {
+    display: block;
+    width: 100%;
+  }
+
+  & .submit {
+    width: 50%;
+  }
+
+  & .login {
+    float: right;
+    line-height: var(--btn-height-lg);
+  }
+}
+
+.success,
+.warning,
+.error {
+  transition: color 0.3s;
+}
+
+.success {
+  color: var(--success-color);
+}
+
+.warning {
+  color: var(--warning-color);
+}
+
+.error {
+  color: var(--error-color);
+}
+
+.progress-pass > .progress {
+  :global {
+    .ant-progress-bg {
+      background-color: var(--warning-color);
+    }
+  }
+}

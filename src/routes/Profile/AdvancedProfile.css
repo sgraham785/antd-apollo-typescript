@@ -1,0 +1,51 @@
+@import "../../_vars.css";
+
+.headerList {
+  margin-bottom: 4px;
+}
+
+.tabsCard {
+  :global {
+    .ant-card-head {
+      padding: 0 16px;
+    }
+  }
+}
+
+.noData {
+  color: var(--disabled-color);
+  text-align: center;
+  line-height: 64px;
+  font-size: 16px;
+  & i {
+    font-size: 24px;
+    margin-right: 16px;
+    position: relative;
+    top: 3px;
+  }
+}
+
+.heading {
+  color: var(--heading-color);
+  font-size: 20px;
+}
+
+.stepDescription {
+  font-size: 14px;
+  position: relative;
+  left: 38px;
+  & > div {
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+}
+
+.textSecondary {
+  color: var(--text-color-secondary);
+}
+
+@media screen and (--screen-sm-max) {
+  .stepDescription {
+    left: 8px;
+  }
+}

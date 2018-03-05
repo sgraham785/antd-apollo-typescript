@@ -1,0 +1,233 @@
+@import "../../_vars.css";
+@import "../../_mixins.css";
+
+.activitiesList {
+  padding: 0 24px 8px 24px;
+  & .username {
+    color: var(--text-color);
+  }
+  & .event {
+    font-weight: normal;
+  }
+}
+
+.pageHeaderContent {
+  display: flex;
+  & .avatar {
+    flex: 0 1 72px;
+    margin-bottom: 8px;
+    & > span {
+      border-radius: 72px;
+      display: block;
+      width: 72px;
+      height: 72px;
+    }
+  }
+  & .content {
+    position: relative;
+    top: 4px;
+    margin-left: 24px;
+    flex: 1 1 auto;
+    color: var(--text-color-secondary);
+    line-height: 22px;
+    & .contentTitle {
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 500;
+      color: var(--heading-color);
+      margin-bottom: 12px;
+    }
+  }
+}
+
+.extraContent {
+  @apply --clearfix;
+  float: right;
+  white-space: nowrap;
+  & .statItem {
+    padding: 0 32px;
+    position: relative;
+    display: inline-block;
+    & > p:first-child {
+      color: var(--text-color-secondary);
+      font-size: var(--font-size-base);
+      line-height: 22px;
+      margin-bottom: 4px;
+    }
+    & > p {
+      color: var(--heading-color);
+      font-size: 30px;
+      line-height: 38px;
+      margin: 0;
+      & > span {
+        color: var(--text-color-secondary);
+        font-size: 20px;
+      }
+    }
+    &:after {
+      background-color: var(--border-color-split);
+      position: absolute;
+      top: 8px;
+      right: 0;
+      width: 1px;
+      height: 40px;
+      content: "";
+    }
+    &:last-child {
+      padding-right: 0;
+      &:after {
+        display: none;
+      }
+    }
+  }
+}
+
+.members {
+  & a {
+    display: block;
+    margin: 12px 0;
+    line-height: 24px;
+    height: 24px;
+    @apply --textOverflow;
+    & .member {
+      font-size: var(--font-size-base);
+      color: var(--text-color);
+      line-height: 24px;
+      max-width: 100px;
+      vertical-align: top;
+      margin-left: 12px;
+      transition: all 0.3s;
+      display: inline-block;
+      @apply --textOverflow;
+    }
+    &:hover {
+      & span {
+        color: var(--primary-color);
+      }
+    }
+  }
+}
+
+.projectList {
+  :global {
+    .ant-card-meta-description {
+      color: var(--text-color-secondary);
+      height: 44px;
+      line-height: 22px;
+      overflow: hidden;
+    }
+  }
+  .cardTitle {
+    font-size: 0;
+    & a {
+      color: var(--heading-color);
+      margin-left: 12px;
+      line-height: 24px;
+      height: 24px;
+      display: inline-block;
+      vertical-align: top;
+      font-size: var(--font-size-base);
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
+  & .projectGrid {
+    width: 33.33%;
+  }
+  & .projectItemContent {
+    display: flex;
+    margin-top: 8px;
+    overflow: hidden;
+    font-size: 12px;
+    height: 20px;
+    line-height: 20px;
+    @apply --textOverflow;
+    & a {
+      color: var(--text-color-secondary);
+      display: inline-block;
+      flex: 1 1 0;
+      @apply --textOverflow;
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+    & .datetime {
+      color: var(--disabled-color);
+      flex: 0 0 auto;
+      float: right;
+    }
+  }
+}
+
+.datetime {
+  color: var(--disabled-color);
+}
+
+@media screen and (--screen-xl-max) and (--screen-lg-min) {
+  .activeCard {
+    margin-bottom: 24px;
+  }
+  .members {
+    margin-bottom: 0;
+  }
+  .extraContent {
+    margin-left: -44px;
+    & .statItem {
+      padding: 0 16px;
+    }
+  }
+}
+
+@media screen and (--screen-lg-max) {
+  .activeCard {
+    margin-bottom: 24px;
+  }
+  .members {
+    margin-bottom: 0;
+  }
+  .extraContent {
+    float: none;
+    margin-right: 0;
+    & .statItem {
+      padding: 0 16px;
+      text-align: left;
+      &:after {
+        display: none;
+      }
+    }
+  }
+}
+
+@media screen and (--screen-md-max) {
+  .extraContent {
+    margin-left: -16px;
+  }
+  .projectList {
+    & .projectGrid {
+      width: 50%;
+    }
+  }
+}
+
+@media screen and (--screen-sm-max) {
+  .pageHeaderContent {
+    display: block;
+    & .content {
+      margin-left: 0;
+    }
+  }
+  .extraContent {
+    & .statItem {
+      float: none;
+    }
+  }
+}
+
+@media screen and (--screen-xs-max) {
+  .projectList {
+    & .projectGrid {
+      width: 100%;
+    }
+  }
+}

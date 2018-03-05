@@ -1,0 +1,253 @@
+import * as React from "react";
+import { Fragment } from "react";
+import * as PropTypes from "prop-types";
+import { Layout, Icon, message } from "antd";
+import GlobalFooter from "ant-design-pro/lib/GlobalFooter";
+import GlobalHeader from "../components/GlobalHeader";
+import DocumentTitle from "react-document-title";
+import { connect } from "dva";
+import { Route, Redirect, Switch, routerRedux } from "dva/router";
+import { ContainerQuery } from "react-container-query";
+import * as classNames from "classnames";
+import { enquireScreen } from "enquire-js";
+import NotFound from "../routes/Exception/404";
+import { getRoutes } from "../utils/utils";
+import Authorized from "../utils/Authorized";
+import { getMenuData } from "../common/menu";
+import logo from "../assets/logo.svg";
+import SiderMenu from "../components/SiderMenu";
+
+const { Content, Header, Footer } = Layout;
+const { AuthorizedRoute } = Authorized;
+
+/**
+ * Get the redirection address according to the menu.
+ */
+const redirectData = [];
+const getRedirect = item => {
+  if (item && item.children) {
+    if (item.children[0] && item.children[0].path) {
+      redirectData.push({
+        from: `/${item.path}`,
+        to: `/${item.children[0].path}`
+      });
+      item.children.forEach(children => {
+        getRedirect(children);
+      });
+    }
+  }
+};
+getMenuData().forEach(getRedirect);
+
+const query = {
+  "screen-xs": {
+    maxWidth: 575
+  },
+  "screen-sm": {
+    minWidth: 576,
+    maxWidth: 767
+  },
+  "screen-md": {
+    minWidth: 768,
+    maxWidth: 991
+  },
+  "screen-lg": {
+    minWidth: 992,
+    maxWidth: 1199
+  },
+  "screen-xl": {
+    minWidth: 1200
+  }
+};
+
+let isMobile;
+enquireScreen(b => {
+  isMobile = b;
+});
+
+class BasicLayout extends React.PureComponent {
+  static childContextTypes = {
+    location: PropTypes.object,
+    breadcrumbNameMap: PropTypes.object
+  };
+  state = {
+    isMobile
+  };
+  getChildContext() {
+    const { location, routerData } = this.props;
+    return {
+      location,
+      breadcrumbNameMap: routerData
+    };
+  }
+  componentDidMount() {
+    enquireScreen(mobile => {
+      this.setState({
+        isMobile: mobile
+      });
+    });
+    this.props.dispatch({
+      type: "user/fetchCurrent"
+    });
+  }
+  getPageTitle() {
+    const { routerData, location } = this.props;
+    const { pathname } = location;
+    let title = "Ant Design Pro";
+    if (routerData[pathname] && routerData[pathname].name) {
+      title = `${routerData[pathname].name} - Ant Design Pro`;
+    }
+    return title;
+  }
+  getBashRedirect = () => {
+    // Redirect sccording to the url parameter redirect
+    const urlParams = new URL(window.location.href);
+
+    const redirect = urlParams.searchParams.get("redirect");
+    // Remove the parameters in the url
+    if (redirect) {
+      urlParams.searchParams.delete("redirect");
+      window.history.replaceState(null, "redirect", urlParams.href);
+    } else {
+      return "/dashboard/analysis";
+    }
+    return redirect;
+  };
+  handleMenuCollapse = collapsed => {
+    this.props.dispatch({
+      type: "global/changeLayoutCollapsed",
+      payload: collapsed
+    });
+  };
+  handleNoticeClear = type => {
+    message.success(`Cleared ${type}`);
+    this.props.dispatch({
+      type: "global/clearNotices",
+      payload: type
+    });
+  };
+  handleMenuClick = ({ key }) => {
+    if (key === "triggerError") {
+      this.props.dispatch(routerRedux.push("/exception/trigger"));
+      return;
+    }
+    if (key === "logout") {
+      this.props.dispatch({
+        type: "login/logout"
+      });
+    }
+  };
+  handleNoticeVisibleChange = visible => {
+    if (visible) {
+      this.props.dispatch({
+        type: "global/fetchNotices"
+      });
+    }
+  };
+  render() {
+    const {
+      currentUser,
+      collapsed,
+      fetchingNotices,
+      notices,
+      routerData,
+      match,
+      location
+    } = this.props;
+    const bashRedirect = this.getBashRedirect();
+    const layout = (
+      <Layout>
+        <SiderMenu
+          logo={logo}
+          // If you do not have the Authorized parameter
+          // you will be forced to jump to the 403 interface without permission
+          Authorized={Authorized}
+          menuData={getMenuData()}
+          collapsed={collapsed}
+          location={location}
+          isMobile={this.state.isMobile}
+          onCollapse={this.handleMenuCollapse}
+        />
+        <Layout>
+          <Header style={{ padding: 0 }}>
+            <GlobalHeader
+              logo={logo}
+              currentUser={currentUser}
+              fetchingNotices={fetchingNotices}
+              notices={notices}
+              collapsed={collapsed}
+              isMobile={this.state.isMobile}
+              onNoticeClear={this.handleNoticeClear}
+              onCollapse={this.handleMenuCollapse}
+              onMenuClick={this.handleMenuClick}
+              onNoticeVisibleChange={this.handleNoticeVisibleChange}
+            />
+          </Header>
+          <Content style={{ margin: "24px 24px 0", height: "100%" }}>
+            <Switch>
+              {redirectData.map(item => (
+                <Redirect key={item.from} exact from={item.from} to={item.to} />
+              ))}
+              {getRoutes(match.path, routerData).map(item => (
+                <AuthorizedRoute
+                  key={item.key}
+                  path={item.path}
+                  component={item.component}
+                  exact={item.exact}
+                  authority={item.authority}
+                  redirectPath="/exception/403"
+                />
+              ))}
+              <Redirect exact from="/" to={bashRedirect} />
+              <Route render={NotFound} />
+            </Switch>
+          </Content>
+          <Footer style={{ padding: 0 }}>
+            <GlobalFooter
+              links={[
+                {
+                  key: "Pro Ant Design",
+                  title: "Pro Ant Design",
+                  href: "http://pro.ant.design",
+                  blankTarget: true
+                },
+                {
+                  key: "github",
+                  title: <Icon type="github" />,
+                  href: "https://github.com/ant-design/ant-design-pro",
+                  blankTarget: true
+                },
+                {
+                  key: "Ant Design",
+                  title: "Ant Design",
+                  href: "http://ant.design",
+                  blankTarget: true
+                }
+              ]}
+              copyright={
+                <Fragment>
+                  Copyright <Icon type="copyright" /> 2018 Canary Health
+                </Fragment>
+              }
+            />
+          </Footer>
+        </Layout>
+      </Layout>
+    );
+
+    return (
+      <DocumentTitle title={this.getPageTitle()}>
+        <ContainerQuery query={query}>
+          {params => <div className={classNames(params)}>{layout}</div>}
+        </ContainerQuery>
+      </DocumentTitle>
+    );
+  }
+}
+
+export default connect(({ user, global, loading }) => ({
+  currentUser: user.currentUser,
+  collapsed: global.collapsed,
+  fetchingNotices: loading.effects["global/fetchNotices"],
+  notices: global.notices
+}))(BasicLayout);
