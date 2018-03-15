@@ -1,24 +1,32 @@
-import * as React from "react";
-import { Fragment } from "react";
+import React, { Fragment } from "react";
 import * as PropTypes from "prop-types";
+import { Redirect, Switch, Route, routerRedux } from "dva/router";
 import { Layout, Icon, message } from "antd";
-import GlobalFooter from "ant-design-pro/lib/GlobalFooter";
-import GlobalHeader from "../components/GlobalHeader";
 import DocumentTitle from "react-document-title";
+import logo from "../assets/canary_logo.png";
 import { connect } from "dva";
-import { Route, Redirect, Switch, routerRedux } from "dva/router";
 import { ContainerQuery } from "react-container-query";
+import GlobalHeader from "../components/GlobalHeader";
+import GlobalFooter from "ant-design-pro/lib/GlobalFooter";
 import * as classNames from "classnames";
 import { enquireScreen } from "enquire-js";
 import NotFound from "../routes/Exception/404";
 import { getRoutes } from "../utils/utils";
 import Authorized from "../utils/Authorized";
 import { getMenuData } from "../common/menu";
-import logo from "../assets/logo.svg";
 import SiderMenu from "../components/SiderMenu";
+
+import { graphql } from "react-apollo";
+import { PostsQuery } from '../queries/queries'
 
 const { Content, Header, Footer } = Layout;
 const { AuthorizedRoute } = Authorized;
+
+const copyright = (
+  <Fragment>
+    Copyright <Icon type="copyright" /> 2018 Canary Health
+  </Fragment>
+);
 
 /**
  * Get the redirection address according to the menu.
@@ -65,7 +73,7 @@ enquireScreen(b => {
   isMobile = b;
 });
 
-class BasicLayout extends React.PureComponent {
+class AdminLayout extends React.PureComponent {
 
   static childContextTypes = {
     location: PropTypes.object,
@@ -94,9 +102,9 @@ class BasicLayout extends React.PureComponent {
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;
-    let title = "Ant Design Pro";
+    let title = "Canary Health Admin";
     if (routerData[pathname] && routerData[pathname].name) {
-      title = `${routerData[pathname].name} - Ant Design Pro`;
+      title = `${routerData[pathname].name} - Canary Health`;
     }
     return title;
   }
@@ -110,7 +118,7 @@ class BasicLayout extends React.PureComponent {
       urlParams.searchParams.delete("redirect");
       window.history.replaceState(null, "redirect", urlParams.href);
     } else {
-      return "/dashboard/analysis";
+      return "/admin/analysis";
     }
     return redirect;
   };
@@ -146,18 +154,19 @@ class BasicLayout extends React.PureComponent {
     }
   };
   render() {
+    console.log('Admin Layout')
+    console.log('props ')
+    console.log(this.props)
     const {
       currentUser,
-      collapsed,
       fetchingNotices,
       notices,
+      collapsed,
       routerData,
       match,
-      location
+      location,
+      data: { loading, posts },
     } = this.props;
-
-    console.log('Authorized ', Authorized)
-
     const bashRedirect = this.getBashRedirect();
     const layout = (
       <Layout>
@@ -208,26 +217,6 @@ class BasicLayout extends React.PureComponent {
           </Content>
           <Footer style={{ padding: 0 }}>
             <GlobalFooter
-              links={[
-                {
-                  key: "Pro Ant Design",
-                  title: "Pro Ant Design",
-                  href: "http://pro.ant.design",
-                  blankTarget: true
-                },
-                {
-                  key: "github",
-                  title: <Icon type="github" />,
-                  href: "https://github.com/ant-design/ant-design-pro",
-                  blankTarget: true
-                },
-                {
-                  key: "Ant Design",
-                  title: "Ant Design",
-                  href: "http://ant.design",
-                  blankTarget: true
-                }
-              ]}
               copyright={
                 <Fragment>
                   Copyright <Icon type="copyright" /> 2018 Canary Health
@@ -254,4 +243,4 @@ export default connect(({ user, global, loading }) => ({
   collapsed: global.collapsed,
   fetchingNotices: loading.effects["global/fetchNotices"],
   notices: global.notices
-}))(BasicLayout);
+}))(graphql(PostsQuery)(AdminLayout));

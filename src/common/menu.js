@@ -2,12 +2,31 @@ import { isUrl } from "../utils/utils";
 
 export const menuData = [
   {
+    name: "admin",
+    icon: "dashboard",
+    path: "admin",
+    children: [
+      {
+        name: "users",
+        path: "users"
+      },
+      {
+        name: "programs",
+        path: "programs"
+      },
+      {
+        name: "workshops",
+        path: "workshops" // hideInMenu: true,
+      }
+    ]
+  },
+  {
     name: "dashboard",
     icon: "dashboard",
     path: "dashboard",
     children: [
       {
-        name: "Analysis page",
+        name: "analysis page",
         path: "analysis"
       },
       {
@@ -34,14 +53,14 @@ export const menuData = [
         path: "step-form"
       },
       {
-        name: "Advanced Form",
+        name: "advanced Form",
         authority: "admin",
         path: "advanced-form"
       }
     ]
   },
   {
-    name: "List page",
+    name: "list page",
     icon: "table",
     path: "list",
     children: [
@@ -87,7 +106,7 @@ export const menuData = [
         path: "basic"
       },
       {
-        name: "Advanced details page",
+        name: "advanced details page",
         path: "advanced",
         authority: "admin"
       }
